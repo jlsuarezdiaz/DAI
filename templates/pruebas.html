@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Pruebas {% endblock %}
+
+{% block head %}
+
+<script>
+    $(function(){
+        var response;
+        $.get("/pruebas", function(r){
+            response = r;
+        })
+
+        console.log(response);
+    })
+
+</script>
+
+{% endblock %}

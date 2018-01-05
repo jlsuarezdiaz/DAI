@@ -1,0 +1,34 @@
+{% block head %}
+<link href="/static/css/headbar.css" rel="stylesheet">
+
+<script>
+  $('.navbar .dropdown').hover(function() {
+    $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
+  }, function() {
+    $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp()
+  });
+</script>
+{% endblock %}
+
+<div class="navbar-header">
+  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+  <a class="navbar-brand" href="/">Juan Luis Suárez Díaz</a>
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+  <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+      {% if user.is_authenticated %}
+        {% include "logout_head_form.html" %}
+      {% else %}
+        {% include "login_head_form.html" %}
+      {% endif %}
+    
+    </li>
+    <li id="dark"><a href="#">DARK MODE</a></li>
+  </ul>
+</div>

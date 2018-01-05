@@ -1,0 +1,206 @@
+{% extends "layout.html" %}
+
+{% block title %}Restaurantes {% endblock %}
+
+{% block head %}
+{% for i in range %}
+
+<script>
+$(document).ready(function(){
+    //$("#panel-head-{{i}}").click(function(){
+    //    $("#panel-body-{{i}}").toggle("slow");
+    //});
+    $("#panel-{{i}}").mouseenter(function(){
+        delay(document.getElementById('panel-{{i}}'), function(){
+            $("#panel-body-{{i}}").slideDown()
+        });
+        
+    });
+    $("#panel-{{i}}").mouseleave(function(){
+        $("#panel-body-{{i}}").slideUp()
+    });
+
+});
+</script>
+{% endfor %}
+
+<script>
+var delay = function (elem, callback) {
+    var timeout = null;
+    elem.onmouseover = function() {
+        // Set timeout to be a timer which will invoke callback after 1s
+        timeout = setTimeout(callback, 0);
+    };
+
+    elem.onmouseout = function() {
+        // Clear any timers set to timeout
+        clearTimeout(timeout);
+    }
+};
+</script>
+
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return '';
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    var type = getParameterByName('type')
+    var zone = getParameterByName('zone')
+    var cp = getParameterByName('cp')
+    var name = getParameterByName('name')
+    var street = getParameterByName('street')
+    var page = 0
+
+    function pager(myPage){
+        page=myPage
+        $.ajax({ 
+            type: 'GET', 
+            url: '/restaurants/query', 
+            data: { page: myPage, type: type, zone: zone, cp: cp, name: name, street: street }, 
+            dataType:'json',
+            success: function (data) {
+                var meta = data[data.length-1]
+                if(meta.page <= 0){
+                    $("#bt-prev").hide()
+                }
+                else{
+                    $("#bt-prev").show()
+                }
+                if(meta.last >= meta.tot){
+                    $("#bt-next").hide()
+                }
+                else{
+                    $("#bt-next").show()
+                }
+                if(meta.tot == 0){
+                    $("#results").text("No se encontraron resultados.")
+                    for (var i = 0; i < 10; i++) {
+                        $("#search-results").hide()
+                    }
+                }
+                else{
+                    var results_text = "Mostrando "+meta.first+"-"+meta.last+" resultados de "+meta.tot
+                    $("#results").text(results_text)
+                    $("#search-results").show()
+                }
+                for (var i = 0; i < 10; i++) {
+                    if(i < data.length-1){
+                        $("#panel-"+i).show()
+                        $("#name-"+i).text(data[i].name);
+                        $("#zone-"+i).text(data[i].zone);
+                        $("#type-"+i).text(data[i].type);
+                        $("#street-"+i).text(data[i].street);
+                        $("#number-"+i).text(data[i].number);
+                        $("#cp-"+i).text(data[i].cp);
+                        $("#loc-"+i).attr("href","{% url 'view_restaurant' %}?lat="+data[i].n_coord+"&lng="+data[i].e_coord)/*"https://www.google.es/maps/place/"+data[i].n_coord+","+data[i].e_coord);*/
+                        $("#set-"+i).attr("href","{% url 'edit_restaurant' %}"+data[i].id)
+                    }
+                    else{
+                        $("#panel-"+i).hide()
+                    }
+                }
+                
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        pager(0);
+    });
+
+    $(document).ready(function(){
+        $("#bt-prev").click(function(){
+            pager(page-1)
+        });
+
+        $("#bt-next").click(function(){
+            pager(page+1);
+        });
+
+    });
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-header">Restaurantes</h1>
+
+<p id="results">Mostrando ?-? resultados de ?</p>
+
+<p><a href="/restaurants/search" class="btn btn-primary" role="button"> Nueva búsqueda </a>
+    <a href="/restaurants/new" class="btn btn-success" role="button"> Añadir restaurante</a>
+    <a href="/restaurants/stats" class="btn btn-info" role="button"> Estadísticas</a>
+</p>
+
+
+<div class="panel-group" id="search-results">
+    {% for i in range %}
+
+  <div class="panel panel-info" id="panel-{{i}}">
+    <div class="panel-heading" id="panel-head-{{i}}">
+        <div class="row">
+            <div class="col-sm-3">
+                <span class="label label-primary" id="name-{{i}}">{{name}}</span>
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+            
+                <span class="glyphicon glyphicon-circle-arrow-down" style="background-color:green,font-size:10px"></span> 
+            
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" id="panel-body-{{i}}" style="display:none">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <span class="label label-info" style="min-width:40px">Tipo</span> <span id="type-{{i}}">{{type}}</span>
+            <br><span class="label label-info">Zona</span> <span id="zone-{{i}}">{{zone}}</span>
+            <br><br>
+            </div> 
+
+            <div class="col-sm-3">
+                <a id="loc-{{i}}" href="https://www.google.es/maps/place/{{n_coord}},{{e_coord}}" target="_blank"><i class="material-icons" style="font-size: 36px;color:green">place</i> </a>
+            </div>
+
+            <div class="col-sm-3">
+                <a id="set-{{i}}" href="/restaurants/edit/"><i class="fa fa-gears" style="font-size:36px;color:gray"></i></a>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <span class="label label-info">Calle</span> <span id="street-{{i}}">{{street}}</span>
+            </div>
+            <div class="col-sm-3">
+                <span class="label label-info">Número</span> <span id="number-{{i}}">{{number}}</span>
+            </div>
+            <div class="col-sm-3">
+                <span class="label label-info">CP</span> <span id="cp-{{i}}">{{cp}}</span>
+            </div>
+        </div>
+        
+    </div>
+  </div>
+  {% endfor %}
+</div>
+  
+
+<ul class="pager">
+    
+  <li class="previous active" id="bt-prev"><a>Anterior</a></li>
+    
+  <li class="next active" id="bt-next"><a>Siguiente</a></li>
+    
+</ul>
+
+
+{% endblock %}

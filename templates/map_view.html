@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}Localización {% endblock %}
+
+{% block head %}
+<style>
+    #map{
+        height:400px;
+        width:100%;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1 class="page_header">Localización</h1>
+
+    <div id="map"></div>
+    
+    <script>
+        function initMap() {
+            var uluru = {lat: {{ lat }}, lng: {{ lng }} };
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              center: uluru
+            });
+            var marker = new google.maps.Marker({
+              position: uluru,
+              map: map
+            });
+        }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmlWV-O6QQvL8GltgJwC-ssWUT46-JooU&callback=initMap">
+    </script>
+
+{% endblock %}

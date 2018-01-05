@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %} Error {% endblock %}
+
+{% block body %}
+
+
+    <h1 class="page-header"> {{ fail_title }} </h1>
+    <div class="alert alert-danger">
+        {{ fail_msg }} <a href="{{ fail_link }}" class="alert-link">{{ fail_link_text }} </a>
+    </div>
+
+
+{% endblock %}

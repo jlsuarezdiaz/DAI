@@ -1,0 +1,194 @@
+{% extends "layout.html" %}
+
+{% block title %}Estadísticas {% endblock %}
+
+{% block head %}
+<style>
+    #stats{
+        height:400px;
+        width:100%;
+    }
+</style>
+
+<script>
+    function get_matrix(json){
+        m = []
+        jQuery.each(json, function(i,val){
+            m.push([i,val])
+        });
+        return m
+    }
+
+
+
+    function get_stats(type,mode){
+        $.getJSON("{% url 'stats_query' %}", {type: type},  function(json){
+            meta = json[0]
+            data = get_matrix(json[1]);
+            var rot = 0;
+            if(mode === 'column'){
+                rot = -90;
+            }
+
+            var pieColors = (function () {
+                var colors = [],
+                    base = Highcharts.getOptions().colors[4],
+                    i;
+
+
+                for (i = 0; i < 10; i += 1) {
+                    // Start out with a darkened base color (negative brighten), and end
+                    // up with a much brighter color
+                    colors.push(Highcharts.Color(base).brighten((i - 3) / (10-3)).get());
+                }
+                return colors;
+            }());
+
+            Highcharts.setOptions({
+                colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+            });
+                        
+            Highcharts.chart('stats',{
+                chart: {
+                    type: mode
+                },
+                title: {
+                    text: 'Restaurantes por '+meta.typetext
+                },
+
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -75,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Número de restaurantes'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.y:.0f} restaurantes</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        //cursor: 'pointer',
+                        //colors: pieColors,
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.x}</b><br>{point.percentage:.1f} %',
+                            distance: -50,
+                            filter: {
+                                property: 'percentage',
+                                operator: '>',
+                                value: 4
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    data: data,
+                    dataLabels: {
+                        enabled: true,
+                        rotation: rot,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '<b>{point.name}</b><br>{point.y:.0f}', 
+                        y: 10, // 10 pixels down from the top
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }]
+            });
+        });
+    }
+
+    $(document).ready(function(){
+        var mode = 'column'
+        var type = 'borough'
+        get_stats(type,mode)
+
+        $("#bt-borough").click(function(){
+            type='borough'
+            get_stats(type,mode)
+        });
+
+        $("#bt-cuisine").click(function(){
+            type='cuisine'
+            get_stats(type,mode)
+        });
+
+        $("#bt-column").click(function(){
+            mode='column'
+            get_stats(type,mode)
+        });
+        $("#bt-pie").click(function(){
+            mode='pie'
+            get_stats(type,mode)
+        });
+    })
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+
+<h1 class="page_header">Estadísticas</h1>
+
+    <div class="row">
+            <a id="bt-column" class="btn btn-danger" role="button">Diagrama de barras</a>
+            <a id="bt-pie" class="btn btn-warning" role="button">Diagrama de sectores</a>
+    </div>
+
+    <div id="stats"></div>
+
+    <div class="row">
+            <a id="bt-borough" class="btn btn-primary" role="button">Restaurantes por Barrio</a>
+            <a id="bt-cuisine" class="btn btn-success" role="button">Restaurantes por Tipo de Cocina</a>
+    </div>
+    
+<!--
+    <script>
+    $(function () { 
+        var myChart = Highcharts.chart('stats', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: [{
+                name: 'Jane',
+                data: [1, 0, 4]
+            }, {
+                name: 'John',
+                data: [5, 7, 3]
+            }]
+        });
+    });
+    </script>
+-->
+   
+
+{% endblock %}

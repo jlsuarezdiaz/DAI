@@ -1,0 +1,30 @@
+<li {% if request.path == '/restaurants/' %}class="active"{% endif %}><a href="/restaurants">Restaurantes <span class="sr-only">(current)</span></a></li>
+<li {% if request.path == '/restaurants/search/' %}class="active"{% endif %}><a href="/restaurants/search">Buscar restaurantes <span class="sr-only">(current)</span></a></li>
+<li {% if request.path == '/restaurants/new/' %}class="active"{% endif %}><a href="/restaurants/new/">Añadir restaurante <span class="sr-only">(current)</span></a></li>
+<li {% if request.path == '/restaurants/stats/' %}class="active"{% endif %}><a href="/restaurants/stats">Estadísticas<span class="sr-only">(current)</span></a></li>
+<!--
+<nav>
+  <b> Menú </b>
+  <ul>
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/mandelbrot">Mandelbrot</a></li>
+    <li><a href="/notes">Apuntes</a></li>
+    <li><a href="/profile">Mi perfil</a></li>
+    <li><a href="/users">Usuarios</a></li>
+    <li><a href="/about">About Me</a></li>
+  </ul>
+  <b> Últimas visitas </b>
+
+  <ul>
+    {5 for path in session['history'][-5:][::-1] 5}
+      {5 if path|length > 20 5}
+          {5 set spath = path[0:20]+"..." 5}
+      {5 else 5}
+          {5 set spath = path 5}
+      {5 endif 5}
+        <li><a href={çpathç}>{çspathç}</a></li>
+    {5 endfor 5}
+  </ul>
+
+</nav>
+-->

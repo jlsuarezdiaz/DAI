@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block title %}Restaurantes {% endblock %}
+
+{% block head %}
+{% for i, _,_,_,_,_,_,_,_ in data %}
+<script>
+$(document).ready(function(){
+    $("#panel-head-{{i}}").click(function(){
+        $("#panel-body-{{i}}").toggle("slow");
+    });
+});
+</script>
+{% endfor %}
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-header">Restaurantes</h1>
+
+{% if tot == 0 %}
+<p>No se encontraron resultados.</p>
+{% else %}
+<p>Mostrando {{first}}-{{last}} resultados de {{tot}}.</p> 
+{% endif %}
+
+<p><a href="/restaurants/search" class="btn btn-primary" role="button"> Nueva búsqueda </a></p>
+
+
+<div class="panel-group">
+    {% for i, name, type, zone, n_coord, e_coord, street, number, cp in data %}
+
+  <div class="panel panel-info">
+    <div class="panel-heading" id="panel-head-{{i}}">
+        <div class="row">
+            <div class="col-sm-3">
+                <span class="label label-primary">{{name}}</span>
+            </div> 
+        </div>
+    </div>
+    <div class="panel-body" id="panel-body-{{i}}" style="display:none">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <span class="label label-info" style="min-width:40px">Tipo</span> {{type}}
+            <br><span class="label label-info">Zona</span> {{zone}}
+            <br><br>
+            </div> 
+
+            <div class="col-sm-3">
+                <a href="https://www.google.es/maps/place/{{n_coord}},{{e_coord}}" target="_blank"><i class="material-icons" style="font-size: 36px;color:green">place</i> </a>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <span class="label label-info">Calle</span> {{street}}
+            </div>
+            <div class="col-sm-3">
+                <span class="label label-info">Número</span> {{number}}
+            </div>
+            <div class="col-sm-3">
+                <span class="label label-info">CP</span> {{cp}}
+            </div>
+        </div>
+        
+    </div>
+  </div>
+  {% endfor %}
+</div>
+  
+
+<ul class="pager">
+    {% if page > 0 %}
+  <li class="previous"><a href="/restaurants/{{page-1}}/?{{request.query_string.decode()}}">Anterior</a></li>
+    {% endif %}
+
+    {% if last < tot %}
+  <li class="next"><a href="/restaurants/{{page+1}}/?{{request.query_string.decode()}}">Siguiente</a></li>
+    {% endif %}
+</ul>
+
+
+{% endblock %}

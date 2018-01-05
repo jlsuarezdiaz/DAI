@@ -1,0 +1,35 @@
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Inicia sesión</b> <span class="caret"></span></a>
+        <ul id="login-dp" class="dropdown-menu">
+          <li>
+           <div class="row">
+              <div class="col-md-12">
+                
+                 <form class="form" role="form" method="post" action="{% url 'auth_login' %}" accept-charset="UTF-8" id="login-nav">
+                    {% csrf_token %}
+                    <div class="form-group">
+                       <label class="sr-only" for="exampleInputEmail2">Usuario</label>
+                       <input type="text" class="form-control" id="exampleInputEmail2" name="username" placeholder="Usuario" required>
+                    </div>
+                    <div class="form-group">
+                       <label class="sr-only" for="exampleInputPassword2">Contraseña</label>
+                       <input type="password" class="form-control" id="exampleInputPassword2" name="password" placeholder="Contraseña" required>
+                                             <!--<div class="help-block text-right"><a href="">Forget the password ?</a></div>-->
+                    </div>
+                    <div class="form-group">
+                       <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+                    </div>
+                    <!--
+                    <div class="checkbox">
+                       <label>
+                       <input type="checkbox"> keep me logged-in
+                       </label>
+                    </div>
+                    -->
+                 </form>
+              </div>
+              <div class="bottom text-center">
+                ¿Eres nuevo? <a href="{% url 'registration_register' %}"><b>Regístrate</b></a>
+              </div>
+           </div>
+          </li> 
+        </ul>

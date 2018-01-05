@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %} Registrarse {% endblock %}
+
+{% block body %}
+
+    <h1 class="page-header"> Usuarios </h1>
+    {% for username, name in data %}
+        <div class="panel panel-primary">
+            <div class="panel-heading"><a style="color:white" href="/users/{{ username }}"><b>@{{username}}</b></a></div>
+            <div class="panel-body">{{name}}</div>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}

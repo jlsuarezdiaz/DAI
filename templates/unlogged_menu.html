@@ -1,0 +1,4 @@
+<li {% if request.path == '/restaurants/' %}class="active"{% endif %}><a href="/restaurants">Restaurantes <span class="sr-only">(current)</span></a></li>
+<li {% if request.path == '/restaurants/search/' %}class="active"{% endif %}><a href="/restaurants/search">Buscar restaurantes <span class="sr-only">(current)</span></a></li>
+<li {% if request.path == '/accounts/login/' %}class="active"{% endif %}><a href="{% url 'auth_login' %}">Iniciar sesión <span class="sr-only">(current)</span></a></li>
+<li {% if request.path == '/accounts/register/' %}class="active"{% endif %}><a href="{% url 'registration_register' %}">Registrarse <span class="sr-only">(current)</span></a></li>

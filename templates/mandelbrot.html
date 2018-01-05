@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block title %} Conjunto de Mandelbrot {% endblock %}
+
+{% block body %}
+
+
+<h1 class="page-header">Conjunto de Mandelbrot</h1>
+
+            <p> En esta página puedes dibujar a tu gusto el Conjunto de Mandelbrot.
+            <br> Introduce los parámetros que desees a continuación. </p>
+
+            <div class="alert alert-info">
+            <a href = "https://es.wikipedia.org/wiki/Conjunto_de_Mandelbrot" target = "_blank" class="alert-link">¿Qué es el Conjunto de Mandelbrot? </a>
+            </div>
+    
+            <form action="/mandelbrot/#mandelbrotimg" method="get">
+                <div class="row">
+                    <label for="rect"><b>Rectángulo a dibujar: </b></label>
+                </div>
+                <div class="row">
+                    <label for="esq-ii"><i>Esquina inferior izquierda:</i></label>
+                </div>
+                <div class="row text-center">
+                    <div class="form-group col-xs-4">
+                        x: <input class="form-control" type="number" name="x1" min=-4.0 max=0.0 step=0.1 value={{ x1 }}>   
+                    </div>
+
+                    <div class="form-group col-xs-4">
+                        y: <input class="form-control" type="number" name="y1" min=-4.0 max=0.0 step=0.1 value={{ y1 }}>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="esq-sd"><i>Esquina superior derecha:</i></label>
+                </div>
+
+                <div class="row text-center">
+                    <div class="form-group col-xs-4">
+                        x: <input class="form-control" type="number" name="x2" min=0.0 max=4.0 step=0.1 value={{ x2 }}>   
+                    </div>
+
+                    <div class="form-group col-xs-4">
+                        y: <input class="form-control" type="number" name="y2" min=0.0 max=4.0 step=0.1 value={{ y2 }}>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="width"><b>Anchura de la imagen (píxeles): </b></label>
+                        <input class="form-control" type="number" name="width" min=10 max=5000 step=1 value={{ width }}>  
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="its"><b>Número de iteraciones: </b></label>
+                        <input class="form-control" type="number" name="its" min=1 max=5000 step=1 value={{ its }}>  
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="pallet"><b>Paleta de colores: </b></label>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                    
+                        <div class="radio">
+                            <input type="radio" name="pallet" value="chocolate" {{ chk_chocolate }}> Chocolate 
+                        </div> 
+                        <div class="radio">          
+                            <input type="radio" name="pallet" value="rainbow" {{ chk_rainbow }}> Arcoiris   
+                        </div>     
+                        <div class="radio">
+                            <input type="radio" name="pallet" value="heat" {{ chk_heat }}          > Colores cálidos  
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="pallet" value="cold" {{ chk_cold }}          > Colores fríos    
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="pallet" value="gray" {{ chk_gray }}          > Escala de grises 
+                        </div>
+                    </div>    
+                </div>
+
+                <p><div class="row text-center">
+                    <input type="submit" class="btn btn-primary" value="Crear imagen"/>
+                </div></p>
+            </form>
+
+            <p><div class="row text-center" id="mandelbrotimg">
+                <img class="img-rounded" src={{ img_src }} alt="Conjunto de Mandelbrot">
+            </div></p>
+
+            <p><div class="row text-center">
+                <a class="btn btn-success" href={{ img_src }} download="mandelbrot.png">Descargar</a>
+            </div></p>
+        </body>
+        </html>
+
+{% endblock %}

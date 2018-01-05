@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %} Apuntes {% endblock %}
+
+{% block body %}
+
+
+  <h1 class="page-header">Apuntes</h1>
+  <p>En esta sección encontrarás apuntes de distintas asignaturas.</p>
+
+  {% for text, url, date in data %}
+    <div class="panel panel-primary">
+        <div class="panel-heading"><a style="color:white" href="{{url}}" target = "_blank">{{text}}</a></div>
+        <div class="panel-body"><i>Última actualización: {{date}}</i></div>
+    </div>
+  {% endfor %}
+  
+  
+
+
+{% endblock %}

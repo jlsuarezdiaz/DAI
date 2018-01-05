@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar restaurante {% endblock %}
+
+{% block body %}
+
+<h1 class="page-header">Editar restaurante</h1>
+
+
+<form action="{% url 'edit_restaurant'  %}{{id}}/" method="post">
+    <div class="row">
+        <div class="form-group col-xs-4">
+            {% csrf_token %}
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {{ dform.as_p }}
+            <input type="submit" class="btn btn-success btn-block" value="Editar restaurante" />
+        </div>
+    </div>
+</form>
+
+<form action="{% url 'remove_restaurant' %}" method="post">
+    <div class="row">
+        <div class="form-group col-xs-4">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{id}}">
+            <input type="submit" class="btn btn-danger btn-block" value="Eliminar restaurante" />
+        </div>
+    </div>
+</form>
+
+{% endblock %}

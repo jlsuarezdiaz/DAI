@@ -1,0 +1,7 @@
+<ul class="nav nav-sidebar">
+  {% if user.is_authenticated %}
+  {% include "logged_menu.html" %}
+  {% else %}
+  {% include "unlogged_menu.html" %}
+  {% endif %}
+</ul>

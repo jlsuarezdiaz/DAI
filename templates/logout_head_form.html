@@ -1,0 +1,28 @@
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>{{user.username}}</b> <span class="caret"></span></a>
+        <ul id="login-dp" class="dropdown-menu">
+          <li>
+           <div class="row">
+              <div class="col-md-12">
+                {% if user.is_superuser %}
+                  <a href = "{% url 'admin:index' %}" class="btn btn-warning btn-block">Administrar</a>
+                {% endif %}
+                <!--<a href="{% url 'auth_password_change' %}" class="btn btn-primary btn-block">Cambiar contraseña</a>-->
+                
+                 <form class="form" role="form" method="post" action="{% url 'auth_logout' %}?next=/" accept-charset="UTF-8" id="login-nav">
+                    {% csrf_token %}
+                    <div class="form-group">
+
+                       <button type="submit" class="btn btn-danger btn-block">Salir</button>
+                    </div>
+                    <!--
+                    <div class="checkbox">
+                       <label>
+                       <input type="checkbox"> keep me logged-in
+                       </label>
+                    </div>
+                    -->
+                 </form>
+              </div>
+           </div>
+          </li> 
+        </ul>

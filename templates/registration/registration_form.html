@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block body %}
+
+<h1 class="page-header">Nuevo usuario</h1>
+
+<form method="post" action=".">
+  {% csrf_token %}
+  {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="form-group">
+        <p class="required">
+            <label class="required" for="id_username">Nombre de usuario:</label>
+            <input type="text" name="username" class="form-control" id="id_username" maxlength="150" data-toggle="tooltip" title="Obligatorio. 150 caracteres o menos. Solo se admiten letras, dígitos y @/./+/-/_." autofocus required  /> 
+            <!--<span class="helptext">Obligatorio. 150 caracteres o menos. Solo se admiten letras, dígitos y @/./+/-/_.</span>-->
+        </p>
+    </div>
+
+    <div class="form-group">
+        <p class="required">
+            <label class="required" for="id_email">Correo electrónico:</label>
+            <input type="email" name="email" class="form-control" id="id_email" required />
+        </p>
+    </div>
+
+    <div class="form-group">
+        <p class="required">
+            <label class="required" for="id_password1">Contraseña:</label>
+            <input type="password" name="password1" class="form-control" id="id_password1" data-toggle="tooltip" title="
+                    - La contraseña no puede parecerse al resto de tu información personal.
+                    - La contraseña debe contener al menos 8 caracteres.
+                    - La contraseña no puede ser una contraseña frecuentemente usada.
+                    - La contraseña no puede ser completamente numérica.
+                " required />
+            <!--<span class="helptext">
+                <ul>
+                    <li>La contraseña no puede parecerse al resto de tu información personal..</li>
+                    <li>La contraseña debe contener al menos 8 caracteres.</li>
+                    <li>La contraseña no puede ser una contraseña frecuentemente usada.</li>
+                    <li>La contraseña no puede ser completamente numérica.</li>
+                </ul>
+            </span>-->
+        </p>
+    </div>
+
+    <div class="form-group">
+        <p class="required">
+            <label class="required" for="id_password2">Confirmación de contraseña:</label>
+            <input type="password" name="password2" class="form-control" id="id_password2" required />
+            <!--<span class="helptext">Introduce la misma contraseña, para verificación.</span>-->
+        </p>
+    </div>
+
+
+  <input type="submit" class="btn btn-success" value="Registrarse." />
+</form>
+{% endblock %}

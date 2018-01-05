@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %} {{ success_title }} {% endblock %}
+
+{% block body %}
+
+    <h1 class="page-header"> {{ success_title }} </h1>
+    <div class="alert alert-success">
+        {{ success_msg }} <a href="{{ success_link }}" class="alert-link">{{ success_link_text }} </a>
+    </div>
+
+{% endblock %}

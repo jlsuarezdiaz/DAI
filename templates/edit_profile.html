@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+{% block title %} Registrarse {% endblock %}
+
+{% block body %}
+
+
+<h1 class="page-header">Editar perfil</h1>
+
+    {% if msg_error %}
+        <div class="alert alert-danger">
+            {{ msg_error }}
+        </div>
+    {% endif %}
+
+        <h3> Datos personales </h3>
+    
+            <form action="/profile/change/" method="POST">
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label  for="name">Nombre</label>
+                           <input type="text" class="form-control" id="name" name="name" value="{{name}}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label  for="surname">Apellidos</label>
+                           <input type="text" class="form-control" id="surname" name="surname" value="{{surname}}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label  for="email">E-mail</label>
+                           <input type="email" class="form-control" id="email" name="email" value="{{email}}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="description">Descripción:</label>
+                        <textarea class="form-control" rows="5" id="description" name="description">{{description}}</textarea>
+                    </div>
+                </div> 
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                       <button type="submit" class="btn btn-success btn-block">Cambiar perfil</button>
+                    </div>  
+                </div>
+
+            </form>
+
+        <h3> Cambiar nombre de usuario </h3>
+
+            <form action="/profile/changeuser/" method="POST">
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label for="confirmchange">Contraseña actual</label>
+                           <input type="password" class="form-control" id="confirmchange" name="confirmchange" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label  for="username">Nuevo nombre de usuario</label>
+                           <input type="text" class="form-control" id="username" name="username" value="{{ username }}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                       <button type="submit" class="btn btn-warning btn-block">Cambiar nombre de usuario</button>
+                    </div>  
+                </div>
+
+            
+
+            </form>
+
+        <h3> Cambiar contraseña </h3>
+
+            <form action="/profile/changepasswd/" method="POST">
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label for="oldpasswd">Contraseña actual</label>
+                           <input type="password" class="form-control" id="oldpasswd" name="oldpasswd" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label for="newpasswd">Nueva contraseña</label>
+                           <input type="password" class="form-control" id="newpasswd" name="newpasswd" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label for="confirmpasswd">Repite tu contraseña</label>
+                           <input type="password" class="form-control" id="confirmpasswd" name="confirmpasswd" required>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                       <button type="submit" class="btn btn-warning btn-block">Cambiar contraseña</button>
+                    </div>  
+                </div>
+            </form> 
+
+        <h3> Eliminar perfil </h3>
+
+            <form action="/profile/erase/" method="POST">
+
+                <div class="alert alert-danger">
+                    <b>ATENCIÓN:</b> Si borras tu cuenta perderás toda su información y no podrás volver a recuperarla.
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                           <label for="confirmdelete">Introduce tu contraseña para confirmar</label>
+                           <input type="password" class="form-control" id="confirmdelete" name="confirmdelete" required>
+                    </div>
+                </div>           
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                       <button type="submit" class="btn btn-danger btn-block">Eliminar cuenta</button>
+                    </div>  
+                </div>
+
+            </form> 
+
+       
+
+
+{% endblock %}
