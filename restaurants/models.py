@@ -9,6 +9,7 @@ from django.dispatch import receiver
 
 from pymongo import MongoClient
 import re as regex
+import shelve
 
 client = MongoClient()
 db = client.test                  # base de datos

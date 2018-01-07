@@ -1,9 +1,9 @@
 # restaurants/views.py
 
-from django.shortcuts import render, HttpResponse, render_to_response
+from django.shortcuts import render, HttpResponse, render_to_response, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import restaurants_db, regex, BoroughNY, groupByAndCount
+from .models import restaurants_db, regex, BoroughNY, groupByAndCount, shelve
 from .forms import RestaurantForm
 from bson.objectid import ObjectId
 
@@ -183,3 +183,84 @@ def stats_query(request):
 #        stats = groupByAndCount(restaurants_db,['name'])
 
     return JsonResponse([metadata,stats],safe=False)
+
+def football(request):
+    db = shelve.open('.football')
+    if '#KEYS' not in db:
+        db['#KEYS'] = {}
+    days = []
+    for k in db['#KEYS']:
+        if k != '#KEYS':
+            days.append((k,db['#KEYS'][k]))
+
+    print(days)
+    return render(request,"football.html",{'days':days,'range':range(10),'date_list':days})
+
+def football_add(request):
+    name = str(request.POST.get("name"))
+    number = int(request.POST.get("number"))
+    key = str(request.POST.get("key"))
+
+    db = shelve.open('.football')
+
+    if key not in db:
+        footlist = ["" for i in range(10)]
+    else:
+        footlist = db[key]
+
+    footlist[number] = name
+    db[key] = footlist
+    db.close()
+    return HttpResponse("")
+
+def football_remove(request):
+    number = int(request.POST.get("number"))
+    key = str(request.POST.get("key"))
+
+    db = shelve.open('.football')
+
+    if key not in db:
+        db[key] = ["" for i in range(10)]
+
+    footlist = db[key]
+    footlist[number] = ""
+
+    db[key] = footlist
+    db.close()
+    return HttpResponse("")
+
+def football_get(request):
+    data = {}
+    db = shelve.open('.football')
+    for k in db.keys():
+        if k != '#KEYS':
+            data[k] = db[k]
+
+    return JsonResponse(data,safe=False)
+
+def football_addkey(request):
+    db = shelve.open('.football')
+    if '#KEYS' not in db:
+        db['#KEYS'] = []
+
+    days = db['#KEYS']
+    key = str(request.POST.get("key"))
+    info = str(request.POST.get("info"))
+    if key != '#KEYS':
+        days[key] = info
+
+    db['#KEYS']=days
+    db.close()
+    return redirect('football')
+
+def football_removekey(request):
+    db = shelve.open('.football')
+    if '#KEYS' not in db:
+        db['#KEYS'] = []
+
+    days = db['#KEYS']
+    key = str(request.POST.get("key"))
+    days.pop(key)
+    db['#KEYS']=days
+    db.close()
+    return redirect('football')

@@ -1,0 +1,149 @@
+{% extends "layout.html" %}
+
+{% block title %}Apuntarse a fútbol {% endblock %}
+
+{% block head %}
+    <script>
+        function getCookie(name)
+        {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        
+        function get_data(){
+            $.getJSON("{% url 'football_get' %}", function(json){
+                jQuery.each(json, function(key,name){
+                    var rem = 0;
+                    for(var i = 0; i < 10; i++){
+                        $("#text-"+key+"-"+i).val(name[i]);
+                        if(name[i] && name[i].length > 0){
+                            $("#text-"+key+"-"+i).css("border-color","green")  
+                        }
+                        else{
+                            $("#text-"+key+"-"+i).css("border-color","red")
+                            rem = rem +1
+                        }
+                    }
+                    if(rem > 0){
+                        $("#al-remaining-"+key).show()
+                        $("#al-remaining-"+key).html("<strong>Quedan "+rem+" jugadores.</strong>")
+                        $("#al-completed-"+key).hide()
+                    }
+                    else{
+                        $("#al-remaining-"+key).hide()
+                        $("#al-remaining-"+key).html("<strong>Quedan "+rem+" jugadores.</strong>")
+                        $("#al-completed-"+key).show() 
+                        for(var i = 0; i < 10; i++){
+                            $("#text-"+key+"-"+i).css("border-color","cyan")
+                        }
+                    }
+
+                });
+            });
+        }
+
+        $(document).ready(function(){
+            $.ajaxSetup({ 
+                 beforeSend: function(xhr, settings) {
+                     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                         // Only send the token to relative URLs i.e. locally.
+                         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                     }
+                 } 
+             });
+
+            get_data()
+
+            {% for key, name in days %}
+                {% for i in range %}
+                $("#plus-{{key}}-{{i}}").click(function(){
+                    $.post("{% url 'football_add' %}", 
+                        {name: $("#text-{{key}}-{{i}}").val() , number: {{i}} , key: "{{key}}" }, function(){
+                            get_data();
+                        })
+                });
+                $("#minus-{{key}}-{{i}}").click(function(){
+                    $.post("{% url 'football_remove' %}", 
+                        {number: {{i}} , key: "{{key}}" }, function(){
+                            get_data();
+                        })
+                });
+                {% endfor %}
+            {% endfor %}
+        });
+
+            
+
+    </script>
+{% endblock %}
+
+{% block body %}
+        <div class="row">
+    {% for key, name in days %}
+
+            <div class="col-xs-12 col-sm-4">
+                <p><div class="well well-sm"><b>{{name}}</b></div></p>
+            {% for i in range %}
+                <div class="row">
+                    <div class="col-xs-8 col-sm-8">
+                    <input type="text" class="form-control" id="text-{{key}}-{{i}}">
+                    </div>
+                    <button type="button" class="btn btn-success" id="plus-{{key}}-{{i}}">+</button><button type="button" class="btn btn-danger" id="minus-{{key}}-{{i}}">-</button>
+                </div>
+            {% endfor %}
+                <div class="alert alert-warning" id="al-remaining-{{key}}" style="display: none;">Quedan 10 jugadores.</div>
+                <div class="alert alert-success" id="al-completed-{{key}}" style="display: none;"><strong>Lista completada.</strong></div>
+                <br><br>
+            </div>
+    {% endfor %}
+            {% if user.is_superuser %}
+            <div class="col-xs-12 col-sm-4">
+                <p><div class="alert alert-warning"><b>Administrar fechas</b></div></p>
+                {% for k, d in date_list %}
+                    <div class="row">
+                        <div class="col-xs-8 col-sm-8">
+                            <form class="form" role="form" method="post" action="{% url 'football_removekey' %}" accept-charset="UTF-8" id="login-nav">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="hidden" value="{{k}}" name="key"/>
+                                    <div class="well well-sm">{{k}}</div> <div class="well well-sm"><b>{{d}}</b></div>
+                                    <input type="submit" class="btn btn-danger" value = "-">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+                    <div class="row">
+                        <div class="col-xs-8 col-sm-8">
+                            <form class="form" role="form" method="post" action="{% url 'football_addkey' %}" accept-charset="UTF-8" id="login-nav">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="i1" name="key" placeholder="Clave" required>
+                                    <input type="text" class="form-control" id="i2" name="info" placeholder="Información" required>
+                                    <input type="submit" class="btn btn-success" value="+">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                
+            </div>
+
+
+        </div>
+            {% endif %}
+    
+{% endblock %}
