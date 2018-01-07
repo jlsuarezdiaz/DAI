@@ -1,2 +1,3 @@
 myapp/__pycache__/
 restaurants/__pycache__/
+db.sqlite3
